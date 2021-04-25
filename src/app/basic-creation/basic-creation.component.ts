@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { interval, Subscription, timer } from 'rxjs';
+import { fromEvent, interval, Subscription, timer } from 'rxjs';
 import { of } from 'rxjs';
 import { from } from 'rxjs';
 import { Observable, Observer } from 'rxjs';
@@ -52,6 +52,11 @@ export class BasicCreationComponent implements OnInit {
     //const source = interval(1000); Conta uma vez só
     const source = timer(3000, 1000);
     const subscripition = source.subscribe((v) => console.log(v)); // TImer te possivbilita de contar uma vez só e parar, ou de esperar um tempo e ir contando de tempo em tempo
+    this.subscription.add(subscripition);
+  }
+  fromEventClick(){
+    const subscripition = fromEvent(document, 'click')
+    .subscribe((e) => console.log(e));
     this.subscription.add(subscripition);
   }
 
