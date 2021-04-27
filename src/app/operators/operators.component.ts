@@ -72,8 +72,19 @@ export class OperatorsComponent implements OnInit {
     const s: Subscription = observable
     .pipe(
       tap(i => console.log(i)),
-      take(10)
+      take(10) //first() pega o primeiro elemento  last() pega o ultimo elemento a ser gerado
     )
-    .subscribe(v => console.log('Final: ', v));
+    .subscribe(v => console.log('Final: ', v),
+    (error) => console.error(error),
+    () => console.log('Complete!')
+    );
+
+    const interv = setInterval(()=> {
+      console.log('Checando...');
+      if(s.closed){
+        console.warn('Subscription fechado!')
+        clearInterval(interv)
+      }
+    }, 200)
   }
 }
