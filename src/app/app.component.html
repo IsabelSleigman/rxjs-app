@@ -5,6 +5,7 @@
       <mat-radio-button value="operators">Operators</mat-radio-button>
       <mat-radio-button value="async">Templates/ Async</mat-radio-button>
       <mat-radio-button value="error-handling">Error Handling</mat-radio-button>
+      <mat-radio-button value="drag-and-drop">Drag End Drop</mat-radio-button>
     </mat-radio-group>
   </div>
   <div fxFlex="70" fxLayout="column" fxLayoutAlign="center start">
@@ -13,6 +14,8 @@
       <app-operators *ngSwitchCase="'operators'" fxfill></app-operators>
       <app-async *ngSwitchCase="'async'" fxfill></app-async>
       <app-error-handling *ngSwitchCase="'error-handling'" fxfill></app-error-handling>
+      <app-drag-and-drop *ngSwitchCase="'drag-and-drop'" fxfill></app-drag-and-drop>
+
     </ng-container>
   </div>
 
