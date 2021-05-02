@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
+import { timer } from 'rxjs';
 import { from, fromEvent, interval, Observable, Subject, Subscription } from 'rxjs';
-import { debounceTime, delay, filter, map, take, tap } from 'rxjs/operators';
+import { debounceTime, delay, filter, map, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-operators',
@@ -10,9 +11,10 @@ import { debounceTime, delay, filter, map, take, tap } from 'rxjs/operators';
 })
 export class OperatorsComponent implements OnInit {
 
-  @ViewChild(MatRipple) ripple : MatRipple;
+  @ViewChild(MatRipple) ripple: MatRipple;
   searchInput: string = '';
   searchEntry$: Subject<string> = new Subject<string>();
+
 
   constructor() { }
 
@@ -51,7 +53,7 @@ export class OperatorsComponent implements OnInit {
       .subscribe(i => console.log(i));
   }
 
-  tapClick(){
+  tapClick() {
     interval(1000)
       .pipe(
         tap(i => console.log('')),
@@ -65,36 +67,35 @@ export class OperatorsComponent implements OnInit {
       .subscribe(i => console.log(i));
   }
 
-  takeClick(){
-    const observable = new Observable((observer) =>
-    {
+  takeClick() {
+    const observable = new Observable((observer) => {
       let i;
-      for(i=0;i<20;i++)
-        setTimeout(() => observer.next(Math.floor(Math.random()*100)), i*100)
-        setTimeout(()=> observer.complete(), i*100)
+      for (i = 0; i < 20; i++)
+        setTimeout(() => observer.next(Math.floor(Math.random() * 100)), i * 100)
+      setTimeout(() => observer.complete(), i * 100)
     });
 
     const s: Subscription = observable
-    .pipe(
-      tap(i => console.log(i)),
-      take(10) //first() pega o primeiro elemento  last() pega o ultimo elemento a ser gerado
-    )
-    .subscribe(v => console.log('Final: ', v),
-    (error) => console.error(error),
-    () => console.log('Complete!')
-    );
+      .pipe(
+        tap(i => console.log(i)),
+        take(10) //first() pega o primeiro elemento  last() pega o ultimo elemento a ser gerado
+      )
+      .subscribe(v => console.log('Final: ', v),
+        (error) => console.error(error),
+        () => console.log('Complete!')
+      );
 
-    const interv = setInterval(()=> {
+    const interv = setInterval(() => {
       console.log('Checando...');
-      if(s.closed){
+      if (s.closed) {
         console.warn('Subscription fechado!')
         clearInterval(interv)
       }
     }, 200)
   }
-  debounceTimeClick(){
+  debounceTimeClick() {
     fromEvent(document, 'click').pipe(
-      tap((e)=> console.log('Cliquei')),
+      tap((e) => console.log('Cliquei')),
       debounceTime(1000)
     ).subscribe((e: MouseEvent) => {
       console.log("Click", e);
@@ -102,19 +103,38 @@ export class OperatorsComponent implements OnInit {
     })
 
   }
-  launchRipple(){
+  launchRipple() {
     const rippleRef = this.ripple.launch({
-      persistent: true, centered : true
+      persistent: true, centered: true
     });
     rippleRef.fadeOut();
   }
-  debounceTimeSearch(){
+  debounceTimeSearch() {
     this.searchEntry$.pipe(
       debounceTime(700)
     ).subscribe((s) => console.log(s));
   }
 
-  searchBy_Debounce($event){
+  searchBy_Debounce($event) {
     this.searchEntry$.next(this.searchInput);
+  }
+
+  takeUntilClick() {
+    let dueTime$ = timer(5000);
+    interval(500)
+    .pipe(
+      takeUntil(dueTime$)
+      ).subscribe((i) => console.log('TakeUntil', i),
+      (error) => console.error(error),
+      () => console.log('Completado'));
+
+  }
+  takeWhileClick() {
+    interval(500)
+    .pipe(
+      takeWhile((value, index) => (value < 5))
+      ).subscribe((i) => console.log('TakeWhile', i),
+      (error) => console.error(error),
+      () => console.log('Completado'));
   }
 }
