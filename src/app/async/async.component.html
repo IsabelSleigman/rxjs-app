@@ -6,6 +6,25 @@
                <mat-list-option *ngFor="let op of options$ | async ">{{op}}</mat-list-option>
            </mat-selection-list>
        </mat-card-content>
+     <!--  <mat-card-actions>
+        <div *ngIf="user$|async; else loadingUser1">
+            <p>Nome: {{(user$ | async)?.name}}</p>
+            <p>Senha: {{(user$ | async)?.login}}</p>
+        </div>
+        <ng-template #loadingUser1>
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </ng-template> -->
+        <mat-card-actions>
+        <div *ngIf="user$|async as user; else loadingUser2">
+            <p>Nome: {{user.name}}</p>
+            <p>Senha: {{user.login}}</p>
+        </div>
+        <ng-template #loadingUser2>
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </ng-template>
+    </mat-card-actions>
+
    </mat-card>
+  
 </div>
 
